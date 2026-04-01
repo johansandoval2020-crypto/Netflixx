@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Netflix</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #111;
+  color:black;
+}
+
+header {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+  padding: 20px;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+}
+
+header h1 {
+  color: red;
+  margin: 0;
+}
+
+.hero {
+  height: 60vh;
+  background: url('https://i.pinimg.com/736x/ad/a2/7c/ada27cdb944093ec411f41cfc680427d.jpg') center/cover;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+}
+
+.row {
+  margin: 20px;
+}
+
+.row-images {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+.row-images img {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.row-images img:hover {
+  transform: scale(1.1);
+}
+
+/* BOTÓN + */
+.add-btn {
+  min-width: 120px;
+  height: 180px;
+  border: 2px dashed #555;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  color: #888;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.add-btn:hover {
+  background-color: #222;
+}
+
+/* MODALES */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.modal-content button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: red;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background: darkred;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Netflix</h1>
+</header>
+
+<div class="hero">
+  <h2>Nuestro Amor 💕 </h2>
+</div>
+
+<p style="margin-left:20px; color:gray;">
+</p>
+
+<!-- FILA 1 -->
+<div class="row">
+  <h2>Tendencias</h2>
+  <div class="row-images" id="fila1">
+
+    <img src="cine.jpeg">
+    <img src="tata.jpeg">
+    <img src="lambo.jpeg">
+    <img src="tati.jpeg">
+    <img src="tato.jpeg">
+    <img src="tatoro.jpeg">
+    <img src="uru.jpeg">
+    <img src="caco.jpeg">
+    <img src="asta.jpeg">
+    <img src="tata.jpeg">
+    <img src="p.jpeg">
+    <img src="e.jpeg">
+    <img src="n.jpeg">
+    <img src="i.jpeg">
+    <img src="t.jpeg">
+    <img src="a.jpeg">
+    <img src="u.jpeg">
+    <img src="w.jpeg">
+    <img src="uu.jpeg">
+    <img src="onichan.jpeg">
+
+    <div class="add-btn" onclick="addImage('fila1')">+</div>
+  </div>
+</div>
+
+<!-- FILA 2 -->
+<div class="row">
+  <h2>Recomendados</h2>
+  <div class="row-images" id="fila2">
+
+    <img src="oi.jpeg">
+    <img src="s.jpeg">
+    <img src="sali.jpeg">
+    <img src="sexo.jpeg">
+    <img src="da.jpeg">
+    <img src="di.jpeg">
+    <img src="du.jpeg">
+    <img src="iu.jpeg">
+    <img src="ki.jpeg">
+    <img src="li.jpeg">
+    
+
+    <div class="add-btn" onclick="addImage('fila2')">+</div>
+  </div>
+</div>
+
+<!-- INPUT OCULTO -->
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+
+<!-- MODAL ELIMINAR BONITO -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <button onclick="confirmDelete()">Sí</button>
+    <button onclick="cancelDelete()">No</button>
+  </div>
+</div>
+
+<script>
+let currentRow = "";
+let imageToDelete = null;
+
+/* AGREGAR IMAGEN */
+function addImage(rowId) {
+  currentRow = rowId;
+  document.getElementById("fileInput").click();
+}
+
+document.getElementById("fileInput").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const img = document.createElement("img");
+    img.src = event.target.result;
+
+    // CLICK DERECHO → abrir modal bonito
+    img.oncontextmenu = function(e) {
+      e.preventDefault();
+      imageToDelete = img;
+      document.getElementById("confirmModal").style.display = "flex";
+    };
+
+    const row = document.getElementById(currentRow);
+    row.insertBefore(img, row.querySelector(".add-btn"));
+  };
+
+  reader.readAsDataURL(file);
+});
+
+/* CONFIRMAR ELIMINAR */
+function confirmDelete() {
+  if (imageToDelete) {
+    imageToDelete.remove();
+    imageToDelete = null;
+  }
+  document.getElementById("confirmModal").style.display = "none";
+}
+
+/* CANCELAR */
+function cancelDelete() {
+  imageToDelete = null;
+  document.getElementById("confirmModal").style.display = "none";
+}
+</script>
+
+</body>
+</html>
